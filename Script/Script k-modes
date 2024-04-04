@@ -1,0 +1,27 @@
+install.packages("klaR")
+library(klaR)
+library(tidyverse)
+library(cluster)
+
+df3 <- read.csv('banco.csv', header = TRUE, sep = ',')
+dim(df3)
+names(df3)
+
+Twithin<-NULL
+for(i in 1:21){
+  cluster.results<-kmodes (df3, i, iter.max=10, weighted = FALSE, fast=TRUE)
+  Twithin[i]<-sum (cluster.results[4]$withindiff)
+}
+
+plot(seq(1,21), Twithin, xlab="k")
+
+resultado_kmodes4 <- kmodes(df3, modes = 4, iter.max = 100,  weighted = FALSE, fast = TRUE)
+print(resultado_kmodes4)
+
+resultado_kmodes5 <- kmodes(df3, modes = 5, iter.max = 100,  weighted = FALSE, fast = TRUE)
+print(resultado_kmodes5)
+
+clusplot(df3, resultado_kmodes5$cluster, color=TRUE, labels=2, lines=0)
+
+
+clusplot(df3, resultado_kmodes5$cluster, color=TRUE, shade=TRUE, labels=2, lines=0, col.p=resultado_kmodes5$cluster)
